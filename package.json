@@ -1,0 +1,16 @@
+{
+  "name": "com.rossogames.rossoforge-pool",
+  "version": "1.0.0",
+  "displayName": "RossoForge-Pool",
+  "description": "-------------------------------------------",
+  "unity": "2025.0",
+  "author": {
+    "name": "Agustin Rosso",
+    "url": "https://www.linkedin.com/in/rossoagustin/"
+  },
+  "keywords": [
+    "pool",
+    "rossogames",
+    "rossoforge"
+  ]
+}
