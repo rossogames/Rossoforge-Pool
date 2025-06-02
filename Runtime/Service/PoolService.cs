@@ -1,10 +1,27 @@
+using RossoForge.Pool.Components;
 using RossoForge.Pool.Data;
+using RossoForge.Services;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RossoForge.Pool.Service
 {
-    public class PoolService : IPoolService
+    public class PoolService : IPoolService, IInitializable
     {
+        private Dictionary<PooledObjectData, Components.Pool> _poolGroups;
+        private GameObject _root;
+
+        public void Initialize()
+        {
+            _poolGroups = new Dictionary<PooledObjectData, Components.Pool>();
+            _root = new GameObject("PoolRoot");
+            _root.AddComponent<PoolRoot>();
+        }
+        public void Dispose()
+        {
+            Object.Destroy(_root);
+        }
+
         public T Get<T>(PooledObjectData data, Transform parent) where T : Component
         {
             throw new System.NotImplementedException();
@@ -12,69 +29,42 @@ namespace RossoForge.Pool.Service
 
         public T Get<T>(PooledObjectData data, Transform parent, Vector3 position, Space relativeTo) where T : Component
         {
-            throw new System.NotImplementedException();
+            var obj = Get(data, parent, position, relativeTo);
+            return obj.GetComponent<T>();
         }
 
-        public Awaitable<T> GetAsync<T>(PooledObjectData data, Transform parent, Vector3 position, Space relativeTo) where T : Component
+        public PooledObject Get(PooledObjectData data, Transform parent, Vector3 position, Space relativeTo)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public void Populate(PooledObjectData data)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void RecoverPool()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Unload(PooledObjectData data)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        /*
-        private readonly Dictionary<PooledObjectData, Components.Pool> _poolGroups;
-        private readonly GameObject _root;
-
-        public PoolService()
-        {
-            _poolGroups = new Dictionary<PooledObjectEntity, Components.Pool>();
-            _root = new GameObject("PoolRoot");
-            _root.AddComponent<PoolRoot>();
-        }
-        public void Initialize()
-        {
-            _eventService = ServiceLocator.Current.Get<IEventService>();
-            _addressablesService = ServiceLocator.Current.Get<IAddressablesService>();
-        }
-        public void Dispose()
-        {
-            Object.Destroy(_root);
-        }
-
-        public PooledObject Get(PooledObjectEntity profile, Transform parent, Vector3 position, Space relativeTo)
-        {
-            var pool = GetPoolGroup(profile);
+            var pool = GetPoolGroup(data);
             return pool.Get(parent, position, relativeTo);
         }
-        public async Awaitable<PooledObject> GetAsync(PooledObjectEntity profile, Transform parent, Vector3 position, Space relativeTo)
-        {
-            if (!_addressablesService.IsAssetLoaded(profile.AddressableEntity))
-                await _addressablesService.LoadAsset(profile.AddressableEntity);
 
-            return Get(profile, parent, position, relativeTo);
-        }
+        //public void Populate(PooledObjectData data)
+        //{
+        //    throw new System.NotImplementedException();
+        //}
+        //
+        //public void RecoverPool()
+        //{
+        //    throw new System.NotImplementedException();
+        //}
+        //
+        //public void Unload(PooledObjectData data)
+        //{
+        //    throw new System.NotImplementedException();
+        //}
+
+        /*
+
+
+
         public T Get<T>(PooledObjectEntity profile, Transform parent) where T : Component
         {
             return Get<T>(profile, parent, Vector3.zero, Space.Self);
         }
         public T Get<T>(PooledObjectEntity profile, Transform parent, Vector3 position, Space relativeTo) where T : Component
         {
-            var obj = Get(profile, parent, position, relativeTo);
-            return obj.GetComponent<T>();
+
         }
         public async Awaitable<T> GetAsync<T>(PooledObjectEntity profile, Transform parent, Vector3 position, Space relativeTo) where T : Component
         {
@@ -101,42 +91,30 @@ namespace RossoForge.Pool.Service
             Object.Destroy(pool.gameObject);
             _poolGroups.Remove(profile);
         }
+        */
 
-        private Components.Pool GetPoolGroup(PooledObjectEntity profile)
+
+        private Components.Pool GetPoolGroup(PooledObjectData data)
         {
-            if (!_poolGroups.ContainsKey(profile))
+            if (!_poolGroups.ContainsKey(data))
             {
-                var newPool = CreatePool(profile, _root.transform);
-                _poolGroups.Add(profile, newPool);
+                var newPool = CreatePool(data, _root.transform);
+                _poolGroups.Add(data, newPool);
             }
 
-            return _poolGroups[profile];
+            return _poolGroups[data];
         }
-        private Components.Pool CreatePool(PooledObjectEntity profile, Transform parent)
+        private Components.Pool CreatePool(PooledObjectData data, Transform parent)
         {
-            if (profile.AddressableEntity == null)
-            {
-                LogHelper.LogMessage($"Missing asset reference: {profile.name}", LogType.Error);
-                return null;
-            }
-
-            var objReference = _addressablesService.GetAssetReference<GameObject>(profile.AddressableEntity);
-            var pool = CreatePool(profile, objReference, profile.MaxSize, parent);
-
-            return pool;
-        }
-        private Components.Pool CreatePool(PooledObjectEntity profile, GameObject assetTemplate, int maxSize, Transform parent)
-        {
-            var obj = new GameObject(profile.name);
+            var obj = new GameObject(data.name);
             obj.transform.parent = parent;
 
             var pool = obj.AddComponent<Components.Pool>();
-            pool.AssetTemplate = assetTemplate;
-            pool.MaxSize = maxSize;
+            pool.AssetTemplate = data.PrefabReference;
+            pool.MaxSize = data.MaxSize;
             pool.Load();
 
             return pool;
         }
-        */
     }
 }

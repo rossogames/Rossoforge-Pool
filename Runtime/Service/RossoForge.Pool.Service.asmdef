@@ -3,7 +3,8 @@
     "rootNamespace": "RossoForge.Pool.Service",
     "references": [
         "RossoForge.Services",
-        "RossoForge.Pool.Data"
+        "RossoForge.Pool.Data",
+        "RossoForge.Pool.Components"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
