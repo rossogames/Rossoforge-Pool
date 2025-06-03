@@ -7,11 +7,10 @@ namespace RossoForge.Pool.Service
 {
     public interface IPoolService : IService
     {
-        T Get<T>(PooledObjectData data, Transform parent) where T : Component;
         T Get<T>(PooledObjectData data, Transform parent, Vector3 position, Space relativeTo) where T : Component;
         PooledObject Get(PooledObjectData data, Transform parent, Vector3 position, Space relativeTo);
-        //void Populate(PooledObjectData data);
+        void Populate(PooledObjectData data);
         //void RecoverPool();
-        //void Unload(PooledObjectData data);
+        void Clear(PooledObjectData data);
     }
 }

@@ -22,11 +22,6 @@ namespace RossoForge.Pool.Service
             Object.Destroy(_root);
         }
 
-        public T Get<T>(PooledObjectData data, Transform parent) where T : Component
-        {
-            throw new System.NotImplementedException();
-        }
-
         public T Get<T>(PooledObjectData data, Transform parent, Vector3 position, Space relativeTo) where T : Component
         {
             var obj = Get(data, parent, position, relativeTo);
@@ -39,44 +34,12 @@ namespace RossoForge.Pool.Service
             return pool.Get(parent, position, relativeTo);
         }
 
-        //public void Populate(PooledObjectData data)
-        //{
-        //    throw new System.NotImplementedException();
-        //}
-        //
-        //public void RecoverPool()
-        //{
-        //    throw new System.NotImplementedException();
-        //}
-        //
-        //public void Unload(PooledObjectData data)
-        //{
-        //    throw new System.NotImplementedException();
-        //}
-
-        /*
-
-
-
-        public T Get<T>(PooledObjectEntity profile, Transform parent) where T : Component
-        {
-            return Get<T>(profile, parent, Vector3.zero, Space.Self);
-        }
-        public T Get<T>(PooledObjectEntity profile, Transform parent, Vector3 position, Space relativeTo) where T : Component
-        {
-
-        }
-        public async Awaitable<T> GetAsync<T>(PooledObjectEntity profile, Transform parent, Vector3 position, Space relativeTo) where T : Component
-        {
-            var obj = await GetAsync(profile, parent, position, relativeTo);
-            return obj.GetComponent<T>();
-        }
-        public void Populate(PooledObjectEntity profile)
+        public void Populate(PooledObjectData data)
         {
             List<PooledObject> pooledObjects = new();
 
-            var pool = GetPoolGroup(profile);
-            for (int i = 0; i < profile.MaxSize; i++)
+            var pool = GetPoolGroup(data);
+            for (int i = 0; i < data.MaxSize; i++)
             {
                 var obj = pool.Get(pool.gameObject.transform, Vector3.zero, Space.World);
                 pooledObjects.Add(obj);
@@ -85,14 +48,15 @@ namespace RossoForge.Pool.Service
             foreach (var obj in pooledObjects)
                 obj.ReturnToPool();
         }
-        public void Unload(PooledObjectEntity profile)
-        {
-            var pool = _poolGroups[profile];
-            Object.Destroy(pool.gameObject);
-            _poolGroups.Remove(profile);
-        }
-        */
 
+        public void Clear(PooledObjectData data)
+        {
+            if (_poolGroups.TryGetValue(data, out Components.Pool pool))
+            {
+                Object.Destroy(pool.gameObject);
+                _poolGroups.Remove(data);
+            }
+        }
 
         private Components.Pool GetPoolGroup(PooledObjectData data)
         {
