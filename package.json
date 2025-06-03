@@ -2,7 +2,7 @@
   "name": "com.rossogames.rossoforge-pool",
   "version": "1.0.0",
   "displayName": "RossoForge-Pool",
-  "description": "-------------------------------------------",
+  "description": "A lightweight object pooling system for Unity, designed for performance-critical applications. Includes support for data-driven configuration via ScriptableObjects, runtime instantiation, and integration with a global service locator. Ideal for reducing GC allocations and improving scene performance in games with frequent object spawning.",
   "unity": "2025.0",
   "author": {
     "name": "Agustin Rosso",
@@ -12,5 +12,12 @@
     "pool",
     "rossogames",
     "rossoforge"
+  ],
+  "samples": [
+    {
+      "displayName": "Spaceship missile Pooling",
+      "description": "A minimal example demonstrating how to use the Pool Service to spawn and reuse missile projectiles from a spaceship. Includes Service Locator setup and data-driven pooling via ScriptableObject assets.",
+      "path": "Samples~/Spaceship"
+    }
   ]
 }
