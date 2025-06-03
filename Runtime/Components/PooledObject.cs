@@ -14,10 +14,7 @@ namespace RossoForge.Pool.Components
         }
         private void OnDisable()
         {
-            if (!_isPooled)
-            {
-                ReturnToPoolAsync();
-            }
+            ReturnToPoolAsync();
         }
 
         public void ReturnToPool()
@@ -28,9 +25,12 @@ namespace RossoForge.Pool.Components
 
         private async void ReturnToPoolAsync()
         {
-            _isPooled = true;
             await Awaitable.NextFrameAsync();
-            OnReturnedToPool?.Invoke(this);
+            if (!_isPooled)
+            {
+                _isPooled = true;
+                OnReturnedToPool?.Invoke(this);
+            }
         }
     }
 }

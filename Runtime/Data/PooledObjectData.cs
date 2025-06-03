@@ -11,8 +11,9 @@ namespace RossoForge.Pool.Data
         [field: SerializeField]
         public int MaxSize { get; private set; } = 1;
 
-        public PooledObjectData()
+        private void OnValidate()
         {
+            MaxSize = Mathf.Max(1, MaxSize);
         }
     }
 }
