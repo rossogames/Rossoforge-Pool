@@ -10,45 +10,47 @@ namespace RossoForge.Pool.Components
         private Transform _nextObjectParent;
         private Vector3 _nextObjectPosition;
         private Space _nextObjectSpace;
+        private int _activeCount;
 
         public int MaxSize { get; set; }
         public GameObject AssetTemplate { get; set; }
 
         public void Load()
         {
+            bool collectionCheck = false;
+#if UNITY_EDITOR
+            collectionCheck = true; // Enable collection check in editor for debugging purposes
+#endif
+
             objectPool = new ObjectPool<PooledObject>(
                 CreateInstance,
                 OnGetFromPool,
                 OnReleaseToPool,
                 OnDestroyPooledObject,
-                true,
+                collectionCheck,
                 MaxSize,
                 MaxSize);
         }
         public PooledObject Get(Transform parent, Vector3 position, Space relativeTo)
         {
+            _activeCount++;
+            if (_activeCount > MaxSize)
+                Debug.LogWarning($"[Pool] Pool for '{AssetTemplate.name}' exceeded MaxSize ({MaxSize}). ActiveCount: {_activeCount}");
+
             _nextObjectParent = parent;
             _nextObjectPosition = position;
             _nextObjectSpace = relativeTo;
-            return objectPool.Get();
+
+            var pooledObject = objectPool.Get();
+            pooledObject.OnReturnedToPool += OnReturnedToPool;
+            return pooledObject;
         }
 
         private PooledObject CreateInstance()
         {
             GameObject obj = Instantiate(AssetTemplate);
             InitializeObject(obj);
-
-            PooledObject pooledObject = obj.AddComponent<PooledObject>();
-            pooledObject.OnReturnedToPool += obj =>
-            {
-                if (this != null && obj != null)
-                {
-                    obj.transform.SetParent(transform);
-                    objectPool.Release(obj);
-                }
-            };
-
-            return pooledObject;
+            return obj.AddComponent<PooledObject>();
         }
         private void OnReleaseToPool(PooledObject pooledObject)
         {
@@ -73,6 +75,17 @@ namespace RossoForge.Pool.Components
             obj.transform.localRotation = Quaternion.identity;
             obj.transform.localScale = Vector3.one;
             obj.SetActive(true);
+        }
+        private void OnReturnedToPool(PooledObject pooledObject)
+        {
+            _activeCount = Mathf.Max(0, _activeCount - 1);
+
+            if (this != null && pooledObject != null)
+            {
+                pooledObject.OnReturnedToPool -= OnReturnedToPool;
+                pooledObject.transform.SetParent(transform);
+                objectPool.Release(pooledObject);
+            }
         }
     }
 }

@@ -8,12 +8,12 @@ namespace RossoForge.Pool.Service
 {
     public class PoolService : IPoolService, IInitializable
     {
-        private Dictionary<PooledObjectData, Components.Pool> _poolGroups;
+        private Dictionary<string, Components.Pool> _poolGroups;
         private GameObject _root;
 
         public void Initialize()
         {
-            _poolGroups = new Dictionary<PooledObjectData, Components.Pool>();
+            _poolGroups = new Dictionary<string, Components.Pool>();
             _root = new GameObject("PoolRoot");
             _root.AddComponent<PoolRoot>();
         }
@@ -51,22 +51,22 @@ namespace RossoForge.Pool.Service
 
         public void Clear(PooledObjectData data)
         {
-            if (_poolGroups.TryGetValue(data, out Components.Pool pool))
+            if (_poolGroups.TryGetValue(data.name, out Components.Pool pool))
             {
                 Object.Destroy(pool.gameObject);
-                _poolGroups.Remove(data);
+                _poolGroups.Remove(data.name);
             }
         }
 
         private Components.Pool GetPoolGroup(PooledObjectData data)
         {
-            if (!_poolGroups.ContainsKey(data))
+            if (!_poolGroups.ContainsKey(data.name))
             {
                 var newPool = CreatePool(data, _root.transform);
-                _poolGroups.Add(data, newPool);
+                _poolGroups.Add(data.name, newPool);
             }
 
-            return _poolGroups[data];
+            return _poolGroups[data.name];
         }
         private Components.Pool CreatePool(PooledObjectData data, Transform parent)
         {

@@ -28,9 +28,9 @@ namespace RossoForge.Pool.Components
 
         private async void ReturnToPoolAsync()
         {
-            await Awaitable.NextFrameAsync();
             _isPooled = true;
-            OnReturnedToPool.Invoke(this);
+            await Awaitable.NextFrameAsync();
+            OnReturnedToPool?.Invoke(this);
         }
     }
 }

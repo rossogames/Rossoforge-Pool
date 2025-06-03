@@ -10,7 +10,6 @@ namespace RossoForge.Pool.Service
         T Get<T>(PooledObjectData data, Transform parent, Vector3 position, Space relativeTo) where T : Component;
         PooledObject Get(PooledObjectData data, Transform parent, Vector3 position, Space relativeTo);
         void Populate(PooledObjectData data);
-        //void RecoverPool();
         void Clear(PooledObjectData data);
     }
 }
