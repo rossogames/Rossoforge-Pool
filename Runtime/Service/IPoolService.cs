@@ -10,6 +10,11 @@ namespace RossoForge.Pool.Service
         T Get<T>(PooledObjectData data, Transform parent, Vector3 position, Space relativeTo) where T : Component;
         PooledObject Get(PooledObjectData data, Transform parent, Vector3 position, Space relativeTo);
         void Populate(PooledObjectData data);
-        void Clear(PooledObjectData data);
+
+        Awaitable<T> GetAsync<T>(PooledObjectAsyncData data, Transform parent, Vector3 position, Space relativeTo) where T : Component;
+        Awaitable<PooledObject> GetAsync(PooledObjectAsyncData data, Transform parent, Vector3 position, Space relativeTo);
+        Awaitable Populate(PooledObjectAsyncData data);
+
+        void Clear(IPooledObjectData data);
     }
 }

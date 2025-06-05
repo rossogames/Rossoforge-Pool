@@ -1,7 +1,10 @@
 {
     "name": "RossoForge.Pool.Data",
     "rootNamespace": "RossoForge.Pool.Data",
-    "references": [],
+    "references": [
+        "Unity.Addressables",
+        "Unity.ResourceManager"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

@@ -2,9 +2,11 @@
     "name": "RossoForge.Pool.Service",
     "rootNamespace": "RossoForge.Pool.Service",
     "references": [
+        "Unity.Addressables",
         "RossoForge.Services",
         "RossoForge.Pool.Data",
-        "RossoForge.Pool.Components"
+        "RossoForge.Pool.Components",
+        "RossoForge.Addressables"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

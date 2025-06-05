@@ -3,10 +3,10 @@ using UnityEngine;
 namespace RossoForge.Pool.Data
 {
     [CreateAssetMenu(fileName = nameof(PooledObjectData), menuName = "RossoForge/Pool/PooledObjectData")]
-    public class PooledObjectData : ScriptableObject
+    public class PooledObjectData : ScriptableObject, IPooledObjectData
     {
         [field: SerializeField]
-        public GameObject PrefabReference { get; private set; }
+        public GameObject AssetReference { get; private set; }
 
         [field: SerializeField]
         public int MaxSize { get; private set; } = 1;
@@ -15,5 +15,10 @@ namespace RossoForge.Pool.Data
         {
             MaxSize = Mathf.Max(1, MaxSize);
         }
+    }
+    public interface IPooledObjectData
+    {
+        string name { get; }
+        int MaxSize { get; }
     }
 }

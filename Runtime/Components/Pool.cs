@@ -13,7 +13,7 @@ namespace RossoForge.Pool.Components
         private int _activeCount;
 
         public int MaxSize { get; set; }
-        public GameObject AssetTemplate { get; set; }
+        public GameObject AssetReference { get; set; }
 
         public void Load()
         {
@@ -35,7 +35,7 @@ namespace RossoForge.Pool.Components
         {
             _activeCount++;
             if (_activeCount > MaxSize)
-                Debug.LogWarning($"[Pool] Pool for '{AssetTemplate.name}' exceeded MaxSize ({MaxSize}). ActiveCount: {_activeCount}");
+                Debug.LogWarning($"[Pool] Pool for '{AssetReference.name}' exceeded MaxSize ({MaxSize}). ActiveCount: {_activeCount}");
 
             _nextObjectParent = parent;
             _nextObjectPosition = position;
@@ -48,7 +48,7 @@ namespace RossoForge.Pool.Components
 
         private PooledObject CreateInstance()
         {
-            GameObject obj = Instantiate(AssetTemplate);
+            GameObject obj = Instantiate(AssetReference);
             InitializeObject(obj);
             return obj.AddComponent<PooledObject>();
         }
