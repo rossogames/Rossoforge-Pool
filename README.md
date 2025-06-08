@@ -11,6 +11,7 @@
 
 The following dependencies must be installed
 * https://github.com/rossogames/Rossoforge-Services.git
+* https://github.com/rossogames/Rossoforge-Addressables.git (Optional)
 
 Watch the tutorial on [Pending]
 
