@@ -467,7 +467,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62b8e8ae48530544cb7db154c596e4ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _missilePoolData: {fileID: 11400000, guid: cbc8dc4fd172daf4dbd2b2d83209988e, type: 2}
+  _missilePoolData: {fileID: 11400000, guid: 0b1dcb22651b8be4faf15943842165a0, type: 2}
 --- !u!1 &2136551966
 GameObject:
   m_ObjectHideFlags: 0
