@@ -1,6 +1,6 @@
+using RossoForge.Core.Pool;
 using RossoForge.Pool.Data;
-using RossoForge.Pool.Service;
-using RossoForge.Services.Locator;
+using RossoForge.Services;
 using UnityEngine;
 
 namespace RossoForge.Pool.Spaceship
@@ -8,7 +8,7 @@ namespace RossoForge.Pool.Spaceship
     public class Spaceship : MonoBehaviour
     {
         [SerializeField]
-        private PooledObjectData _missilePoolData;
+        private PooledGameobjectData _missilePoolData;
 
         private IPoolService _poolService;
         private float _speed = 5f;

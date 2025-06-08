@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace RossoForge.Pool.Data
 {
-    [CreateAssetMenu(fileName = nameof(PooledGameobjectData), menuName = "RossoForge/Pool/PooledObjectData")]
+    [CreateAssetMenu(fileName = nameof(PooledGameobjectData), menuName = "RossoForge/Pool/Pooled Gameobject Data")]
     public class PooledGameobjectData : ScriptableObject, IPooledGameobjectData
     {
         [field: SerializeField]

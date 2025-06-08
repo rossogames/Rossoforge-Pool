@@ -4,7 +4,7 @@ using UnityEngine.AddressableAssets;
 
 namespace RossoForge.Pool.Data
 {
-    [CreateAssetMenu(fileName = nameof(PooledObjectAsyncData), menuName = "RossoForge/Pool/PooledObjectAsyncData")]
+    [CreateAssetMenu(fileName = nameof(PooledObjectAsyncData), menuName = "RossoForge/Pool/Pooled Object Async Data")]
     public class PooledObjectAsyncData : ScriptableObject, IPooledObjectAsyncData
     {
         [field: SerializeField]

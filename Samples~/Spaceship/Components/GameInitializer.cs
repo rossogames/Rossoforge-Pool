@@ -1,5 +1,6 @@
+using RossoForge.Core.Pool;
 using RossoForge.Pool.Service;
-using RossoForge.Services.Locator;
+using RossoForge.Services;
 using UnityEngine;
 
 namespace RossoForge.Pool.Spaceship
