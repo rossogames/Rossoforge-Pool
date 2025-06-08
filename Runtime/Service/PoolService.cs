@@ -61,7 +61,7 @@ namespace RossoForge.Pool.Service
             var pool = GetPoolGroup(data, assetReference);
             return pool.Get(parent, position, relativeTo);
         }
-        public async Awaitable Populate(PooledObjectAsyncData data)
+        public async Awaitable PopulateAsync(PooledObjectAsyncData data)
         {
             var assetReference = await _addressableService.LoadAsync<GameObject>(data.AssetReference);
             Populate(data, assetReference);
@@ -78,13 +78,14 @@ namespace RossoForge.Pool.Service
 
         private Components.Pool GetPoolGroup(IPooledObjectData data, GameObject assetReference)
         {
-            if (!_poolGroups.ContainsKey(data.name))
+            if (_poolGroups.TryGetValue(data.name, out Components.Pool pool))
             {
-                var newPool = CreatePool(data, assetReference, _root.transform);
-                _poolGroups.Add(data.name, newPool);
+                return pool;
             }
-
-            return _poolGroups[data.name];
+            
+            var newPool = CreatePool(data, assetReference, _root.transform);
+            _poolGroups.Add(data.name, newPool);
+            return newPool;
         }
         private Components.Pool CreatePool(IPooledObjectData data, GameObject assetReference, Transform parent)
         {
