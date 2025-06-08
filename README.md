@@ -34,13 +34,17 @@ private void Awake()
     ServiceLocator.Initialize();
 }
 
-// Get the game object from the pool 
-_poolService.GetAsync(_missilePoolData, transform.parent, transform.position, Space.World);
+// Get the gameobject from the pool 
 _poolService.Get(_missilePoolData, transform.parent, transform.position, Space.World);
+_poolService.GetAsync(_missilePoolData, transform.parent, transform.position, Space.World);
+
+// Get the gameobject's component from the pool
+_poolService.Get<Missile>(_missilePoolData, transform.parent, transform.position, Space.World);
+_poolService.GetAsync<Missile>(_missilePoolData, transform.parent, transform.position, Space.World);
 
 // Preload pool
-_poolService.PopulateAsync(_missilePoolData);
 _poolService.Populate(_missilePoolData);
+_poolService.PopulateAsync(_missilePoolData);
 
 ```
 #
