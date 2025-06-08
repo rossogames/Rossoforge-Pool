@@ -1,9 +1,10 @@
+using RossoForge.Core.Pool;
 using UnityEngine;
 
 namespace RossoForge.Pool.Data
 {
-    [CreateAssetMenu(fileName = nameof(PooledObjectData), menuName = "RossoForge/Pool/PooledObjectData")]
-    public class PooledObjectData : ScriptableObject, IPooledObjectData
+    [CreateAssetMenu(fileName = nameof(PooledGameobjectData), menuName = "RossoForge/Pool/PooledObjectData")]
+    public class PooledGameobjectData : ScriptableObject, IPooledGameobjectData
     {
         [field: SerializeField]
         public GameObject AssetReference { get; private set; }
@@ -15,10 +16,5 @@ namespace RossoForge.Pool.Data
         {
             MaxSize = Mathf.Max(1, MaxSize);
         }
-    }
-    public interface IPooledObjectData
-    {
-        string name { get; }
-        int MaxSize { get; }
     }
 }

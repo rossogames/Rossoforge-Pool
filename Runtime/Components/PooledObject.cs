@@ -1,11 +1,12 @@
+using RossoForge.Core.Pool;
 using System;
 using UnityEngine;
 
 namespace RossoForge.Pool.Components
 {
-    public class PooledObject : MonoBehaviour
+    public class PooledObject : MonoBehaviour, IPooledObject
     {
-        public event Action<PooledObject> OnReturnedToPool;
+        public event Action<IPooledObject> OnReturnedToPool;
         private bool _isPooled;
 
         private void OnEnable()

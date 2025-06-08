@@ -1,10 +1,11 @@
+using RossoForge.Core.Pool;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace RossoForge.Pool.Data
 {
     [CreateAssetMenu(fileName = nameof(PooledObjectAsyncData), menuName = "RossoForge/Pool/PooledObjectAsyncData")]
-    public class PooledObjectAsyncData : ScriptableObject, IPooledObjectData
+    public class PooledObjectAsyncData : ScriptableObject, IPooledObjectAsyncData
     {
         [field: SerializeField]
         public AssetReferenceGameObject AssetReference { get; private set; }

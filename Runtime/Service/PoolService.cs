@@ -1,7 +1,7 @@
-using RossoForge.Addressables;
+using RossoForge.Core.Addressables;
+using RossoForge.Core.Pool;
+using RossoForge.Core.Services;
 using RossoForge.Pool.Components;
-using RossoForge.Pool.Data;
-using RossoForge.Services;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,35 +34,35 @@ namespace RossoForge.Pool.Service
         }
 
         // Default
-        public T Get<T>(PooledObjectData data, Transform parent, Vector3 position, Space relativeTo) where T : Component
+        public T Get<T>(IPooledGameobjectData data, Transform parent, Vector3 position, Space relativeTo) where T : Component
         {
             var obj = Get(data, parent, position, relativeTo);
-            return obj.GetComponent<T>();
+            return obj.gameObject.GetComponent<T>();
         }
-        public PooledObject Get(PooledObjectData data, Transform parent, Vector3 position, Space relativeTo)
+        public IPooledObject Get(IPooledGameobjectData data, Transform parent, Vector3 position, Space relativeTo)
         {
             var pool = GetPoolGroup(data, data.AssetReference);
             return pool.Get(parent, position, relativeTo);
         }
-        public void Populate(PooledObjectData data)
+        public void Populate(IPooledGameobjectData data)
         {
             Populate(data, data.AssetReference);
         }
 
         //Async
-        public async Awaitable<T> GetAsync<T>(PooledObjectAsyncData data, Transform parent, Vector3 position, Space relativeTo) where T : Component
+        public async Awaitable<T> GetAsync<T>(IPooledObjectAsyncData data, Transform parent, Vector3 position, Space relativeTo) where T : Component
         {
             var obj = await GetAsync(data, parent, position, relativeTo);
-            return obj.GetComponent<T>();
+            return obj.gameObject.GetComponent<T>();
         }
-        public async Awaitable<PooledObject> GetAsync(PooledObjectAsyncData data, Transform parent, Vector3 position, Space relativeTo)
+        public async Awaitable<IPooledObject> GetAsync(IPooledObjectAsyncData data, Transform parent, Vector3 position, Space relativeTo)
         {
             CheckAddressableService();
             var assetReference = await _addressableService.LoadAsync<GameObject>(data.AssetReference);
             var pool = GetPoolGroup(data, assetReference);
             return pool.Get(parent, position, relativeTo);
         }
-        public async Awaitable PopulateAsync(PooledObjectAsyncData data)
+        public async Awaitable PopulateAsync(IPooledObjectAsyncData data)
         {
             CheckAddressableService();
             var assetReference = await _addressableService.LoadAsync<GameObject>(data.AssetReference);
@@ -84,7 +84,7 @@ namespace RossoForge.Pool.Service
             {
                 return pool;
             }
-            
+
             var newPool = CreatePool(data, assetReference, _root.transform);
             _poolGroups.Add(data.name, newPool);
             return newPool;
@@ -103,7 +103,7 @@ namespace RossoForge.Pool.Service
         }
         private void Populate(IPooledObjectData data, GameObject assetReference)
         {
-            List<PooledObject> pooledObjects = new();
+            List<IPooledObject> pooledObjects = new();
 
             var pool = GetPoolGroup(data, assetReference);
             for (int i = 0; i < data.MaxSize; i++)

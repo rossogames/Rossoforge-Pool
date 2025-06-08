@@ -1,7 +1,9 @@
 {
     "name": "RossoForge.Pool.Components",
     "rootNamespace": "RossoForge.Pool.Components",
-    "references": [],
+    "references": [
+        "RossoForge.Core"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

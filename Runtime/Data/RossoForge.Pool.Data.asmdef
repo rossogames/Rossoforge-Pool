@@ -3,7 +3,7 @@
     "rootNamespace": "RossoForge.Pool.Data",
     "references": [
         "Unity.Addressables",
-        "Unity.ResourceManager"
+        "RossoForge.Core"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -1,3 +1,4 @@
+using RossoForge.Core.Pool;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -5,7 +6,7 @@ namespace RossoForge.Pool.Components
 {
     public class Pool : MonoBehaviour
     {
-        private IObjectPool<PooledObject> objectPool;
+        private IObjectPool<IPooledObject> objectPool;
         private int _activeCount;
 
         public int MaxSize { get; set; }
@@ -18,7 +19,7 @@ namespace RossoForge.Pool.Components
             collectionCheck = true; // Enable collection check in editor for debugging purposes
 #endif
 
-            objectPool = new ObjectPool<PooledObject>(
+            objectPool = new ObjectPool<IPooledObject>(
                 CreateInstance,
                 null,
                 OnReleaseToPool,
@@ -27,7 +28,7 @@ namespace RossoForge.Pool.Components
                 MaxSize,
                 MaxSize);
         }
-        public PooledObject Get(Transform parent, Vector3 position, Space relativeTo)
+        public IPooledObject Get(Transform parent, Vector3 position, Space relativeTo)
         {
             var pooledObject = objectPool.Get();
             pooledObject.OnReturnedToPool += OnReturnedToPool;
@@ -41,16 +42,16 @@ namespace RossoForge.Pool.Components
             return pooledObject;
         }
 
-        private PooledObject CreateInstance()
+        private IPooledObject CreateInstance()
         {
             GameObject obj = Instantiate(AssetReference);
             return obj.AddComponent<PooledObject>();
         }
-        private void OnReleaseToPool(PooledObject pooledObject)
+        private void OnReleaseToPool(IPooledObject pooledObject)
         {
             pooledObject.gameObject.SetActive(false);
         }
-        private void OnDestroyPooledObject(PooledObject pooledObject)
+        private void OnDestroyPooledObject(IPooledObject pooledObject)
         {
             Destroy(pooledObject.gameObject);
         }
@@ -66,7 +67,7 @@ namespace RossoForge.Pool.Components
             obj.transform.localScale = Vector3.one;
             obj.SetActive(true);
         }
-        private void OnReturnedToPool(PooledObject pooledObject)
+        private void OnReturnedToPool(IPooledObject pooledObject)
         {
             _activeCount = Mathf.Max(0, _activeCount - 1);
 
