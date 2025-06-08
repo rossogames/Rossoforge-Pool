@@ -16,7 +16,7 @@ namespace RossoForge.Pool.SpaceshipAsync
         void Start()
         {
             _poolService = ServiceLocator.Get<IPoolService>();
-            _poolService.PopulateAsync(_missilePoolData);
+            //_poolService.PopulateAsync(_missilePoolData);
         }
 
         void Update()

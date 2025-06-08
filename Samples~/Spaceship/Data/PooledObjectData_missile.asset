@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e1f528cea22bfa40b4b474238e15233, type: 3}
   m_Name: PooledObjectData_missile
   m_EditorClassIdentifier: 
-  <PrefabReference>k__BackingField: {fileID: 3274398533215925143, guid: 532d3614db623cd41b5eedfe5beb68c5, type: 3}
+  <AssetReference>k__BackingField: {fileID: 3274398533215925143, guid: 532d3614db623cd41b5eedfe5beb68c5, type: 3}
   <MaxSize>k__BackingField: 5

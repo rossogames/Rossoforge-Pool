@@ -57,12 +57,14 @@ namespace RossoForge.Pool.Service
         }
         public async Awaitable<PooledObject> GetAsync(PooledObjectAsyncData data, Transform parent, Vector3 position, Space relativeTo)
         {
+            CheckAddressableService();
             var assetReference = await _addressableService.LoadAsync<GameObject>(data.AssetReference);
             var pool = GetPoolGroup(data, assetReference);
             return pool.Get(parent, position, relativeTo);
         }
         public async Awaitable PopulateAsync(PooledObjectAsyncData data)
         {
+            CheckAddressableService();
             var assetReference = await _addressableService.LoadAsync<GameObject>(data.AssetReference);
             Populate(data, assetReference);
         }
@@ -112,6 +114,15 @@ namespace RossoForge.Pool.Service
 
             foreach (var obj in pooledObjects)
                 obj.ReturnToPool();
+        }
+        private void CheckAddressableService()
+        {
+            if (_addressableService == null)
+            {
+                string errorMessage = "Failed to load asset: AddressableService is null. Ensure it is properly registered in the service container.";
+                Debug.LogError(errorMessage);
+                throw new System.NullReferenceException();
+            }
         }
     }
 }
