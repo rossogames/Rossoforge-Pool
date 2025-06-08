@@ -10,8 +10,8 @@
 **RossoForge - Pool** A lightweight object pooling system for Unity, designed for performance-critical applications. Includes support for data-driven configuration via ScriptableObjects, runtime instantiation, and integration with a global service locator. Ideal for reducing GC allocations and improving scene performance in games with frequent object spawning.
 
 The following dependencies must be installed
-* https://github.com/rossogames/Rossoforge-Services.git
-* https://github.com/rossogames/Rossoforge-Addressables.git
+* com.unity.addressables
+* [Rossoforge-Core](https://github.com/rossogames/Rossoforge-Core.git)
 
 Watch the tutorial on [Pending]
 
