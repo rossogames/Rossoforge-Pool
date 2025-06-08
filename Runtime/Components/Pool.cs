@@ -6,10 +6,6 @@ namespace RossoForge.Pool.Components
     public class Pool : MonoBehaviour
     {
         private IObjectPool<PooledObject> objectPool;
-
-        private Transform _nextObjectParent;
-        private Vector3 _nextObjectPosition;
-        private Space _nextObjectSpace;
         private int _activeCount;
 
         public int MaxSize { get; set; }
@@ -24,7 +20,7 @@ namespace RossoForge.Pool.Components
 
             objectPool = new ObjectPool<PooledObject>(
                 CreateInstance,
-                OnGetFromPool,
+                null,
                 OnReleaseToPool,
                 OnDestroyPooledObject,
                 collectionCheck,
@@ -33,44 +29,38 @@ namespace RossoForge.Pool.Components
         }
         public PooledObject Get(Transform parent, Vector3 position, Space relativeTo)
         {
+            var pooledObject = objectPool.Get();
+            pooledObject.OnReturnedToPool += OnReturnedToPool;
+
+            InitializeObject(pooledObject.gameObject, parent, position, relativeTo);
+
             _activeCount++;
             if (_activeCount > MaxSize)
                 Debug.LogWarning($"[Pool] Pool for '{AssetReference.name}' exceeded MaxSize ({MaxSize}). ActiveCount: {_activeCount}");
 
-            _nextObjectParent = parent;
-            _nextObjectPosition = position;
-            _nextObjectSpace = relativeTo;
-
-            var pooledObject = objectPool.Get();
-            pooledObject.OnReturnedToPool += OnReturnedToPool;
             return pooledObject;
         }
 
         private PooledObject CreateInstance()
         {
             GameObject obj = Instantiate(AssetReference);
-            InitializeObject(obj);
             return obj.AddComponent<PooledObject>();
         }
         private void OnReleaseToPool(PooledObject pooledObject)
         {
             pooledObject.gameObject.SetActive(false);
         }
-        private void OnGetFromPool(PooledObject pooledObject)
-        {
-            InitializeObject(pooledObject.gameObject);
-        }
         private void OnDestroyPooledObject(PooledObject pooledObject)
         {
             Destroy(pooledObject.gameObject);
         }
-        private void InitializeObject(GameObject obj)
+        private void InitializeObject(GameObject obj, Transform parent, Vector3 position, Space relativeTo)
         {
-            obj.transform.SetParent(_nextObjectParent);
-            if (_nextObjectSpace == Space.Self)
-                obj.transform.localPosition = _nextObjectPosition;
+            obj.transform.SetParent(parent);
+            if (relativeTo == Space.Self)
+                obj.transform.localPosition = position;
             else
-                obj.transform.position = _nextObjectPosition;
+                obj.transform.position = position;
 
             obj.transform.localRotation = Quaternion.identity;
             obj.transform.localScale = Vector3.one;
