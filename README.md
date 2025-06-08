@@ -16,41 +16,32 @@ Watch the tutorial on [Pending]
 
 #
 ```csharp
-// Initialize Service
-public class GameInitializer : MonoBehaviour
+// Initialize Service default
+private void Awake()
 {
-    private void Awake()
-    {
-        ServiceLocator.SetLocator(new DefaultServiceLocator());
-        ServiceLocator.Register<IPoolService>(new PoolService());
-        ServiceLocator.Initialize();
-    }
+    ServiceLocator.SetLocator(new DefaultServiceLocator());
+    ServiceLocator.Register<IPoolService>(new PoolService());
+    ServiceLocator.Initialize();
+}
+
+// Initialize Service with addressables
+private void Awake()
+{
+    var addressableService = new AddressableService();
+    ServiceLocator.SetLocator(new DefaultServiceLocator());
+    ServiceLocator.Register<IAddressableService>(addressableService);
+    ServiceLocator.Register<IPoolService>(new PoolService(addressableService));
+    ServiceLocator.Initialize();
 }
 
 // Get the game object from the pool 
-public class Spaceship : MonoBehaviour
-{
-    [SerializeField]
-    private PooledObjectData _missilePoolData;
+_poolService.GetAsync(_missilePoolData, transform.parent, transform.position, Space.World);
+_poolService.Get(_missilePoolData, transform.parent, transform.position, Space.World);
 
-    private IPoolService _poolService;
+// Preload pool
+_poolService.PopulateAsync(_missilePoolData);
+_poolService.Populate(_missilePoolData);
 
-    void Start()
-    {
-        _poolService = ServiceLocator.Get<IPoolService>();
-    }
-
-    void Update()
-    {
-        Shoot();
-    }
-
-    private void Shoot()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-            _poolService.Get(_missilePoolData, transform.parent, transform.position, Space.World);
-    }
-}
 ```
 #
 This package is part of the **RossoForge** suite, designed to streamline and enhance Unity development workflows.
