@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7838205348048266829}
   - component: {fileID: 7147053715716702469}
-  - component: {fileID: 371622605412024044}
+  - component: {fileID: 8864231957939068022}
   m_Layer: 0
   m_Name: MissileAsync
   m_TagString: Untagged
@@ -77,18 +77,18 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 6289f7da1a3d5d94e89c28a3f6b82863, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1c79c615527ef21479cdb14ac650b0f4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.09, y: 0.54}
+  m_Size: {x: 0.98, y: 0.75}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &371622605412024044
+--- !u!114 &8864231957939068022
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -97,7 +97,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3274398533215925143}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1740cf7caaf530648aa4a6f3a533a27b, type: 3}
+  m_Script: {fileID: 11500000, guid: c64f110fb9ee27d429e879ac7b1e0720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _renderer: {fileID: 7147053715716702469}

@@ -1,6 +1,8 @@
 using RossoForge.Addressables;
+using RossoForge.Core.Addressables;
+using RossoForge.Core.Pool;
 using RossoForge.Pool.Service;
-using RossoForge.Services.Locator;
+using RossoForge.Services;
 using UnityEngine;
 
 namespace RossoForge.Pool.SpaceshipAsync
