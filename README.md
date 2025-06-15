@@ -13,8 +13,9 @@ The following dependencies must be installed
 * com.unity.addressables
 * [Rossoforge-Core](https://github.com/rossogames/Rossoforge-Core.git)
 * [Rossoforge-Addressables](https://github.com/rossogames/Rossoforge-Addressables.git) (Optional)
+* [Rossoforge-Service](https://github.com/rossogames/Rossoforge-Services.git) (Optional)
 
-Watch the tutorial on [Pending]
+Watch the tutorial on https://www.youtube.com/watch?v=0S3NYG8uiQ0
 
 #
 ```csharp
