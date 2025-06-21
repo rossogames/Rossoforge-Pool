@@ -2,7 +2,7 @@
 
 <table>
   <tr>
-    <td><img src="https://github.com/rossogames/Rossoforge-Events/blob/master/logo.png?raw=true" alt="RossoForge" width="64"/></td>
+    <td><img src="https://github.com/rossogames/Rossoforge-Pool/blob/master/logo.png?raw=true" alt="RossoForge" width="64"/></td>
     <td><h2>RossoForge - Pool</h2></td>
   </tr>
 </table>
