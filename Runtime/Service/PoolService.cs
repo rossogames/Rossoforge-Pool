@@ -58,14 +58,14 @@ namespace RossoForge.Pool.Service
         public async Awaitable<IPooledObject> GetAsync(IPooledObjectAsyncData data, Transform parent, Vector3 position, Space relativeTo)
         {
             CheckAddressableService();
-            var assetReference = await _addressableService.LoadAsync<GameObject>(data.AssetReference);
+            var assetReference = await _addressableService.LoadAssetAsync<GameObject>(data.AssetReference);
             var pool = GetPoolGroup(data, assetReference);
             return pool.Get(parent, position, relativeTo);
         }
         public async Awaitable PopulateAsync(IPooledObjectAsyncData data)
         {
             CheckAddressableService();
-            var assetReference = await _addressableService.LoadAsync<GameObject>(data.AssetReference);
+            var assetReference = await _addressableService.LoadAssetAsync<GameObject>(data.AssetReference);
             Populate(data, assetReference);
         }
 
