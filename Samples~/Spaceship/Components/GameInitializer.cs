@@ -1,9 +1,9 @@
-using RossoForge.Core.Pool;
-using RossoForge.Pool.Service;
-using RossoForge.Services;
+using Rossoforge.Core.Pool;
+using Rossoforge.Pool.Service;
+using Rossoforge.Services;
 using UnityEngine;
 
-namespace RossoForge.Pool.Spaceship
+namespace Rossoforge.Pool.Spaceship
 {
     public class GameInitializer : MonoBehaviour
     {

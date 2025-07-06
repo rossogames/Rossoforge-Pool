@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RossoForge.Pool.SpaceshipAsync
+namespace Rossoforge.Pool.SpaceshipAsync
 {
     public class Missile : MonoBehaviour
     {
