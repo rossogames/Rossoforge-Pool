@@ -2,12 +2,12 @@
 
 <table>
   <tr>
-    <td><img src="https://github.com/rossogames/Rossoforge-Pool/blob/master/logo.png?raw=true" alt="RossoForge" width="64"/></td>
-    <td><h2>RossoForge - Pool</h2></td>
+    <td><img src="https://github.com/rossogames/Rossoforge-Pool/blob/master/logo.png?raw=true" alt="Rossoforge" width="64"/></td>
+    <td><h2>Rossoforge-Pool</h2></td>
   </tr>
 </table>
 
-**RossoForge - Pool** A lightweight object pooling system for Unity, designed for performance-critical applications. Includes support for data-driven configuration via ScriptableObjects, runtime instantiation, and integration with a global service locator. Ideal for reducing GC allocations and improving scene performance in games with frequent object spawning.
+**Rossoforge-pool** A lightweight object pooling system for Unity, designed for performance-critical applications. Includes support for data-driven configuration via ScriptableObjects, runtime instantiation, and integration with a global service locator. Ideal for reducing GC allocations and improving scene performance in games with frequent object spawning.
 
 **Version**: Unity 6 or higher
 
@@ -53,7 +53,7 @@ _poolService.PopulateAsync(_missilePoolData);
 
 ```
 #
-This package is part of the **RossoForge** suite, designed to streamline and enhance Unity development workflows.
+This package is part of the **Rossoforge** suite, designed to streamline and enhance Unity development workflows.
 
 Developed by Agustin Rosso
 https://www.linkedin.com/in/rossoagustin/
