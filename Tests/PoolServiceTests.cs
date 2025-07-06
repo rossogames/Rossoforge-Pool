@@ -81,7 +81,7 @@ namespace Rossoforge.Pool.Tests
         }
 
         [Test]
-        public void Populate_CreatesPoolAndPrepopulatesObjects()
+        public void Populate()
         {
             var service = new PoolService();
             service.Initialize();
@@ -171,6 +171,52 @@ namespace Rossoforge.Pool.Tests
         }
 
         [Test]
+        public async Task GetAsync_ReturnsPooledComponent()
+        {
+            var addressableService = Substitute.For<IAddressableService>();
+            var service = new PoolService(addressableService);
+            service.Initialize();
+
+            var assetReference = new AssetReferenceGameObject(Guid.NewGuid().ToString());
+
+            var data = Substitute.For<IPooledObjectAsyncData>();
+            data.MaxSize.Returns(1);
+            data.name.Returns("async_key");
+            data.AssetReference.Returns(assetReference);
+
+            WhenAddressableLoadAssetAsyncGameObject(addressableService, data);
+
+            // Act
+            var result = await service.GetAsync<PooledObject>(data, null, Vector3.zero, Space.World);
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(GameObject.Find("AsyncPrefab"));
+        }
+
+        [Test]
+        public async Task PupulateAsync()
+        {
+            var addressableService = Substitute.For<IAddressableService>();
+            var service = new PoolService(addressableService);
+            service.Initialize();
+
+            var assetReference = new AssetReferenceGameObject(Guid.NewGuid().ToString());
+
+            var data = Substitute.For<IPooledObjectAsyncData>();
+            data.MaxSize.Returns(1);
+            data.name.Returns("async_key");
+            data.AssetReference.Returns(assetReference);
+
+            WhenAddressableLoadAssetAsyncGameObject(addressableService, data);
+
+            // Act
+            await service.PopulateAsync(data);
+
+            var poolObject = GameObject.Find("AsyncPrefab");
+            Assert.IsNotNull(poolObject);
+        }
+
+        [Test]
         public void GetAsync_ThrowsIfAddressableServiceIsNull()
         {
             var service = new PoolService();
@@ -185,7 +231,6 @@ namespace Rossoforge.Pool.Tests
                 await service.GetAsync(data, null, Vector3.zero, Space.World);
             });
         }
-
 
         private static void WhenAddressableLoadAssetAsyncGameObject(IAddressableService addressableService, IPooledObjectAsyncData data)
         {
