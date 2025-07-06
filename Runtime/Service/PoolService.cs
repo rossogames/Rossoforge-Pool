@@ -30,7 +30,11 @@ namespace Rossoforge.Pool.Service
         }
         public void Dispose()
         {
+#if UNITY_EDITOR
+            Object.DestroyImmediate(_root);
+#else
             Object.Destroy(_root);
+#endif
         }
 
         // Default
@@ -69,13 +73,19 @@ namespace Rossoforge.Pool.Service
             Populate(data, assetReference);
         }
 
-        public void Clear(IPooledObjectData data)
+        public bool Clear(IPooledObjectData data)
         {
             if (_poolGroups.TryGetValue(data.name, out Components.Pool pool))
             {
+#if UNITY_EDITOR
+                Object.DestroyImmediate(pool.gameObject);
+#else
                 Object.Destroy(pool.gameObject);
+#endif
                 _poolGroups.Remove(data.name);
+                return true;
             }
+            return false;
         }
 
         private Components.Pool GetPoolGroup(IPooledObjectData data, GameObject assetReference)
