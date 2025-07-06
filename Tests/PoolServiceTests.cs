@@ -7,6 +7,7 @@ using Rossoforge.Pool.Service;
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Rossoforge.Pool.Tests
 {
@@ -117,44 +118,6 @@ namespace Rossoforge.Pool.Tests
             Assert.IsFalse(isCleared);
         }
 
-        /*
-        [Test]
-        public async Task GetAsync_ReturnsPooledObject()
-        {
-            var addressableService = Substitute.For<IAddressableService>();
-            var service = new PoolService(addressableService);
-            service.Initialize();
-
-            var data = Substitute.For<IPooledObjectAsyncData>();
-            data.name.Returns("AsyncPrefab");
-            data.AssetReference.Returns("async_key");
-
-            var loadedAsset = new GameObject("LoadedAsset");
-            addressableService.LoadAssetAsync<GameObject>("async_key").Returns(Task.FromResult(loadedAsset));
-
-            // Act
-            var result = await service.GetAsync(data, null, Vector3.zero, Space.World);
-
-            Assert.IsNotNull(result);
-            Assert.IsNotNull(GameObject.Find("AsyncPrefab"));
-        }
-
-        [Test]
-        public void GetAsync_ThrowsIfAddressableServiceIsNull()
-        {
-            var service = new PoolService();
-            service.Initialize();
-
-            var data = Substitute.For<IPooledObjectAsyncData>();
-            data.AssetReference.Returns("async_key");
-
-            Assert.ThrowsAsync<NullReferenceException>(async () =>
-            {
-                await service.GetAsync(data, null, Vector3.zero, Space.World);
-            });
-        }
-        */
-
         [Test]
         public void Dispose_DestroysRootObject()
         {
@@ -168,5 +131,55 @@ namespace Rossoforge.Pool.Tests
 
             Assert.IsTrue(root == null || root.Equals(null), "Root should be destroyed");
         }
+
+        [Test]
+        public async Task GetAsync_ReturnsPooledObject()
+        {
+            var addressableService = Substitute.For<IAddressableService>();
+            var service = new PoolService(addressableService);
+            service.Initialize();
+
+            var assetReference = new AssetReferenceGameObject(Guid.NewGuid().ToString());
+
+            var data = Substitute.For<IPooledObjectAsyncData>();
+            data.MaxSize.Returns(1);
+            data.name.Returns("async_key");
+            data.AssetReference.Returns(assetReference);
+
+            Func<NSubstitute.Core.CallInfo, Awaitable<GameObject>> value = async call =>
+                {
+                    await Awaitable.WaitForSecondsAsync(0.1f); // Simulate async loading delay
+                    return new GameObject("AsyncPrefab");
+                };
+
+            addressableService
+                .LoadAssetAsync<GameObject>(data.AssetReference)
+                .Returns(value);
+
+            // Act
+            var result = await service.GetAsync(data, null, Vector3.zero, Space.World);
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(GameObject.Find("AsyncPrefab"));
+        }
+
+        /*
+
+
+            [Test]
+            public void GetAsync_ThrowsIfAddressableServiceIsNull()
+            {
+                var service = new PoolService();
+                service.Initialize();
+
+                var data = Substitute.For<IPooledObjectAsyncData>();
+                data.AssetReference.Returns("async_key");
+
+                Assert.ThrowsAsync<NullReferenceException>(async () =>
+                {
+                    await service.GetAsync(data, null, Vector3.zero, Space.World);
+                });
+            }
+            */
     }
 }
