@@ -1,0 +1,23 @@
+{
+    "name": "Rossoforge.Pool.Tests",
+    "rootNamespace": "Rossoforge.Pool.Tests",
+    "references": [
+        "GUID:7627137b8260a65488246a6fb8da320f",
+        "GUID:f9c973908641f9a46a1d906a57c20254",
+        "GUID:66cbf599db304c3479cc62fbcff4037d",
+        "GUID:b3cbb51ff65434d449548fe48c6c6d5e"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "NSubstitute.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
