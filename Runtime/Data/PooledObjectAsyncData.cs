@@ -1,8 +1,8 @@
-using RossoForge.Core.Pool;
+using Rossoforge.Core.Pool;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-namespace RossoForge.Pool.Data
+namespace Rossoforge.Pool.Data
 {
     [CreateAssetMenu(fileName = nameof(PooledObjectAsyncData), menuName = "RossoForge/Pool/Pooled Object Async Data")]
     public class PooledObjectAsyncData : ScriptableObject, IPooledObjectAsyncData

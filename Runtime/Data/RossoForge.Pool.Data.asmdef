@@ -1,9 +1,9 @@
 {
-    "name": "RossoForge.Pool.Data",
-    "rootNamespace": "RossoForge.Pool.Data",
+    "name": "Rossoforge.Pool.Data",
+    "rootNamespace": "Rossoforge.Pool.Data",
     "references": [
         "Unity.Addressables",
-        "RossoForge.Core"
+        "Rossoforge.Core"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

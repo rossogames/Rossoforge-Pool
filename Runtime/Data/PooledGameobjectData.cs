@@ -1,7 +1,7 @@
-using RossoForge.Core.Pool;
+using Rossoforge.Core.Pool;
 using UnityEngine;
 
-namespace RossoForge.Pool.Data
+namespace Rossoforge.Pool.Data
 {
     [CreateAssetMenu(fileName = nameof(PooledGameobjectData), menuName = "RossoForge/Pool/Pooled Gameobject Data")]
     public class PooledGameobjectData : ScriptableObject, IPooledGameobjectData

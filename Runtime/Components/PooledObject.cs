@@ -1,8 +1,8 @@
-using RossoForge.Core.Pool;
+using Rossoforge.Core.Pool;
 using System;
 using UnityEngine;
 
-namespace RossoForge.Pool.Components
+namespace Rossoforge.Pool.Components
 {
     public class PooledObject : MonoBehaviour, IPooledObject
     {
