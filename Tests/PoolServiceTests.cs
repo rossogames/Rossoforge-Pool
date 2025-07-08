@@ -12,6 +12,7 @@ using UnityEngine.TestTools;
 
 namespace Rossoforge.Pool.Tests
 {
+    [TestFixture]
     public class PoolServiceTests
     {
         [TearDown]
