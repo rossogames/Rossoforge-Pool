@@ -1,6 +1,6 @@
 {
-    "name": "Rossoforge.Pool.Data",
-    "rootNamespace": "Rossoforge.Pool.Data",
+    "name": "Rossoforge.Pool",
+    "rootNamespace": "Rossoforge.Pool",
     "references": [
         "Unity.Addressables",
         "Rossoforge.Core"
