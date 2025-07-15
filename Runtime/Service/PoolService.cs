@@ -31,7 +31,10 @@ namespace Rossoforge.Pool.Service
         public void Dispose()
         {
 #if UNITY_EDITOR
-            Object.DestroyImmediate(_root);
+            if (!Application.isPlaying)
+                Object.DestroyImmediate(_root);
+            else
+                Object.Destroy(_root);
 #else
             Object.Destroy(_root);
 #endif
@@ -78,7 +81,10 @@ namespace Rossoforge.Pool.Service
             if (_poolGroups.TryGetValue(data.name, out Components.Pool pool))
             {
 #if UNITY_EDITOR
-                Object.DestroyImmediate(pool.gameObject);
+                if (!Application.isPlaying)
+                    Object.DestroyImmediate(pool.gameObject);
+                else
+                    Object.Destroy(pool.gameObject);
 #else
                 Object.Destroy(pool.gameObject);
 #endif
