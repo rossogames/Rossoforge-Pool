@@ -49,7 +49,7 @@ namespace Rossoforge.Pool.Tests
             data.AssetReference.Returns(new GameObject("MyPrefab1"));
 
             // Act
-            var pooled = service.Get(data, null, new Vector3(1,2,3), Space.World);
+            var pooled = service.Get(data, null, new Vector3(1, 2, 3), Space.World);
 
             // Assert
             Assert.IsNotNull(pooled);

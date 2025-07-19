@@ -7,7 +7,7 @@ namespace Rossoforge.Pool.Tests
     {
         public static IEnumerator AsCoroutine(this Task task)
         {
-            while(!task.IsCompleted) 
+            while (!task.IsCompleted)
             {
                 yield return null;
             }
