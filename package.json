@@ -1,6 +1,6 @@
 {
   "name": "com.rossogames.rossoforge-pool",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "displayName": "Rossoforge-Pool",
   "description": "A lightweight object pooling system for Unity, designed for performance-critical applications. Includes support for data-driven configuration via ScriptableObjects, runtime instantiation, and integration with a global service locator. Ideal for reducing GC allocations and improving scene performance in games with frequent object spawning.",
   "unity": "2025.0",

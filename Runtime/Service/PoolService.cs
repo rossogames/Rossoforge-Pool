@@ -1,11 +1,11 @@
-using RossoForge.Core.Addressables;
-using RossoForge.Core.Pool;
-using RossoForge.Core.Services;
-using RossoForge.Pool.Components;
+using Rossoforge.Core.Addressables;
+using Rossoforge.Core.Pool;
+using Rossoforge.Core.Services;
+using Rossoforge.Pool.Components;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RossoForge.Pool.Service
+namespace Rossoforge.Pool.Service
 {
     public class PoolService : IPoolService, IInitializable
     {
@@ -30,7 +30,14 @@ namespace RossoForge.Pool.Service
         }
         public void Dispose()
         {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+                Object.DestroyImmediate(_root);
+            else
+                Object.Destroy(_root);
+#else
             Object.Destroy(_root);
+#endif
         }
 
         // Default
@@ -69,13 +76,22 @@ namespace RossoForge.Pool.Service
             Populate(data, assetReference);
         }
 
-        public void Clear(IPooledObjectData data)
+        public bool Clear(IPooledObjectData data)
         {
             if (_poolGroups.TryGetValue(data.name, out Components.Pool pool))
             {
+#if UNITY_EDITOR
+                if (!Application.isPlaying)
+                    Object.DestroyImmediate(pool.gameObject);
+                else
+                    Object.Destroy(pool.gameObject);
+#else
                 Object.Destroy(pool.gameObject);
+#endif
                 _poolGroups.Remove(data.name);
+                return true;
             }
+            return false;
         }
 
         private Components.Pool GetPoolGroup(IPooledObjectData data, GameObject assetReference)

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RossoForge.Pool.Components
+namespace Rossoforge.Pool.Components
 {
     public class PoolRoot : MonoBehaviour
     {
