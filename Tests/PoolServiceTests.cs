@@ -1,6 +1,7 @@
 using NSubstitute;
 using NUnit.Framework;
 using Rossoforge.Core.Addressables;
+using Rossoforge.Core.Components;
 using Rossoforge.Core.Pool;
 using Rossoforge.Pool.Components;
 using Rossoforge.Pool.Service;
@@ -32,7 +33,7 @@ namespace Rossoforge.Pool.Tests
 
             var rootObject = GameObject.Find("PoolRoot");
             Assert.IsNotNull(rootObject, "Root GameObject should be created");
-            Assert.IsNotNull(rootObject.GetComponent<PoolRoot>(), "PoolRoot component should be added");
+            Assert.IsNotNull(rootObject.GetComponent<DontDestroyRoot>(), "PoolRoot component should be added");
         }
 
         [Test]
