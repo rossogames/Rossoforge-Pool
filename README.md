@@ -3,7 +3,7 @@
 <table>
   <tr>
     <td><img src="https://github.com/rossogames/Rossoforge-Pool/blob/master/logo.png?raw=true" alt="Rossoforge" width="64"/></td>
-    <td><h2>Rossoforge-Pool</h2></td>
+    <td><h2>Rossoforge - Pool</h2></td>
   </tr>
 </table>
 
