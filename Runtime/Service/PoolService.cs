@@ -1,7 +1,7 @@
 using Rossoforge.Core.Addressables;
+using Rossoforge.Core.Components;
 using Rossoforge.Core.Pool;
 using Rossoforge.Core.Services;
-using Rossoforge.Pool.Components;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,7 +26,7 @@ namespace Rossoforge.Pool.Service
         {
             _poolGroups = new Dictionary<string, Components.Pool>();
             _root = new GameObject("PoolRoot");
-            _root.AddComponent<PoolRoot>();
+            _root.AddComponent<DontDestroyRoot>();
         }
         public void Dispose()
         {
