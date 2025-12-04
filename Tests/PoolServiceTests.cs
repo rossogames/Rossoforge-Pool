@@ -8,8 +8,10 @@ using Rossoforge.Pool.Service;
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.TestTools;
+#if HAS_ADDRESSABLES
+using UnityEngine.AddressableAssets;
+#endif
 
 namespace Rossoforge.Pool.Tests
 {
@@ -147,6 +149,7 @@ namespace Rossoforge.Pool.Tests
             Assert.IsTrue(root == null || root.Equals(null), "Root should be destroyed");
         }
 
+#if HAS_ADDRESSABLES
         [Test]
         public async Task GetAsync_ReturnsPooledObject()
         {
@@ -245,5 +248,6 @@ namespace Rossoforge.Pool.Tests
                 .LoadAssetAsync<GameObject>(data.AssetReference)
                 .Returns(value);
         }
+#endif
     }
 }
