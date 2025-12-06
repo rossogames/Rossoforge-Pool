@@ -56,7 +56,7 @@ namespace Rossoforge.Pool.Service
             Populate(data, data.AssetReference);
         }
 
-        //Async
+#if HAS_ADDRESSABLES
         public async Awaitable<T> GetAsync<T>(IPooledObjectAsyncData data, Transform parent, Vector3 position, Space relativeTo) where T : Component
         {
             var obj = await GetAsync(data, parent, position, relativeTo);
@@ -75,7 +75,7 @@ namespace Rossoforge.Pool.Service
             var assetReference = await _addressableService.LoadAssetAsync<GameObject>(data.AssetReference);
             Populate(data, assetReference);
         }
-
+#endif
         public bool Clear(IPooledObjectData data)
         {
             if (_poolGroups.TryGetValue(data.name, out Components.Pool pool))

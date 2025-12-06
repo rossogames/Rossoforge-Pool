@@ -1,3 +1,4 @@
+#if HAS_ADDRESSABLES
 using Rossoforge.Core.Pool;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -19,3 +20,4 @@ namespace Rossoforge.Pool.Data
         }
     }
 }
+#endif
