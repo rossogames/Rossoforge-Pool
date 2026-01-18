@@ -2,6 +2,7 @@ using Rossoforge.Core.Addressables;
 using Rossoforge.Core.Components;
 using Rossoforge.Core.Pool;
 using Rossoforge.Core.Services;
+using Rossoforge.Utils.Logger;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -136,7 +137,7 @@ namespace Rossoforge.Pool.Service
             if (_addressableService == null)
             {
                 string errorMessage = "Failed to load asset: AddressableService is null. Ensure it is properly registered in the service container.";
-                Debug.LogError(errorMessage);
+                RossoLogger.Error(errorMessage);
                 throw new System.NullReferenceException();
             }
         }

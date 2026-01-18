@@ -3,7 +3,8 @@
     "rootNamespace": "Rossoforge.Pool",
     "references": [
         "Unity.Addressables",
-        "Rossoforge.Core"
+        "Rossoforge.Core",
+        "Rossoforge.Utils"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
