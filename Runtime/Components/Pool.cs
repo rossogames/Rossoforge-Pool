@@ -1,4 +1,5 @@
 using Rossoforge.Core.Pool;
+using Rossoforge.Utils.Logger;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -37,7 +38,7 @@ namespace Rossoforge.Pool.Components
 
             _activeCount++;
             if (_activeCount > MaxSize)
-                Debug.LogWarning($"[Pool] Pool for '{AssetReference.name}' exceeded MaxSize ({MaxSize}). ActiveCount: {_activeCount}");
+                RossoLogger.Warning($"[Pool] Pool for '{AssetReference.name}' exceeded MaxSize ({MaxSize}). ActiveCount: {_activeCount}");
 
             return pooledObject;
         }
