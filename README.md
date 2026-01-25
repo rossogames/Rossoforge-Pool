@@ -18,8 +18,8 @@
 * com.unity.addressables
 * [Rossoforge-Core](https://github.com/rossogames/Rossoforge-Core.git)
 * [Rossoforge-Utils](https://github.com/rossogames/Rossoforge-Utils.git)
+* [Rossoforge-Service](https://github.com/rossogames/Rossoforge-Services.git)
 * [Rossoforge-Addressables](https://github.com/rossogames/Rossoforge-Addressables.git) (Optional)
-* [Rossoforge-Service](https://github.com/rossogames/Rossoforge-Services.git) (Optional)
 
 #
 ```csharp
@@ -27,17 +27,24 @@
 private void Awake()
 {
     ServiceLocator.SetLocator(new DefaultServiceLocator());
-    ServiceLocator.Register<IPoolService>(new PoolService());
+    
+    var poolService = new PoolService();
+    ServiceLocator.Register<IPoolService>(poolService);
+
     ServiceLocator.Initialize();
 }
 
 // Initialize Service with addressables
 private void Awake()
 {
-    var addressableService = new AddressableService();
     ServiceLocator.SetLocator(new DefaultServiceLocator());
+
+    var addressableService = new AddressableService();
+    var poolService = new PoolService();
+
     ServiceLocator.Register<IAddressableService>(addressableService);
-    ServiceLocator.Register<IPoolService>(new PoolService(addressableService));
+    ServiceLocator.Register<IPoolService>(poolService);
+
     ServiceLocator.Initialize();
 }
 
