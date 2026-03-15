@@ -2,6 +2,7 @@ using Rossoforge.Core.Addressables;
 using Rossoforge.Core.Components;
 using Rossoforge.Core.Pool;
 using Rossoforge.Core.Services;
+using Rossoforge.Services;
 using Rossoforge.Utils.Logger;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,19 +16,13 @@ namespace Rossoforge.Pool.Service
 
         private IAddressableService _addressableService;
 
-        public PoolService()
-        {
-        }
-        public PoolService(IAddressableService addressableService)
-        {
-            _addressableService = addressableService;
-        }
-
         public void Initialize()
         {
             _poolGroups = new Dictionary<string, Components.Pool>();
             _root = new GameObject("PoolRoot");
             _root.AddComponent<DontDestroyRoot>();
+
+            ServiceLocator.TryGet<IAddressableService>(out _addressableService);
         }
         public void Dispose()
         {

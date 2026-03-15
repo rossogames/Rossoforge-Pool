@@ -5,12 +5,16 @@ using UnityEngine;
 
 namespace Rossoforge.Pool.Spaceship
 {
-    public class GameInitializer : MonoBehaviour
+    public class Boot : MonoBehaviour
     {
         private void Awake()
         {
             ServiceLocator.SetLocator(new DefaultServiceLocator());
-            ServiceLocator.Register<IPoolService>(new PoolService());
+
+            var poolService = new PoolService();
+
+            ServiceLocator.Register<IPoolService>(poolService);
+
             ServiceLocator.Initialize();
         }
 

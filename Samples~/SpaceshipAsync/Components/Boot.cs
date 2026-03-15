@@ -7,15 +7,18 @@ using UnityEngine;
 
 namespace Rossoforge.Pool.SpaceshipAsync
 {
-    public class GameInitializer : MonoBehaviour
+    public class Boot : MonoBehaviour
     {
         private void Awake()
         {
-            var addressableService = new AddressableService();
-
             ServiceLocator.SetLocator(new DefaultServiceLocator());
+
+            var addressableService = new AddressableService();
+            var poolService = new PoolService();
+
             ServiceLocator.Register<IAddressableService>(addressableService);
-            ServiceLocator.Register<IPoolService>(new PoolService(addressableService));
+            ServiceLocator.Register<IPoolService>(poolService);
+
             ServiceLocator.Initialize();
         }
 
