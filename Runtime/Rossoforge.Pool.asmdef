@@ -4,6 +4,7 @@
     "references": [
         "Unity.Addressables",
         "Rossoforge.Core",
+        "Rossoforge.Events",
         "Rossoforge.Services",
         "Rossoforge.Utils"
     ],
