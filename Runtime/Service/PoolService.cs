@@ -1,7 +1,9 @@
 using Rossoforge.Core.Addressables;
 using Rossoforge.Core.Components;
+using Rossoforge.Core.Events;
 using Rossoforge.Core.Pool;
 using Rossoforge.Core.Services;
+using Rossoforge.Pool.Events;
 using Rossoforge.Services;
 using Rossoforge.Utils.Logger;
 using System.Collections.Generic;
@@ -15,6 +17,7 @@ namespace Rossoforge.Pool.Service
         private GameObject _root;
 
         private IAddressableService _addressableService;
+        private IEventService _eventService;
 
         public void Initialize()
         {
@@ -23,6 +26,7 @@ namespace Rossoforge.Pool.Service
             _root.AddComponent<DontDestroyRoot>();
 
             ServiceLocator.TryGet<IAddressableService>(out _addressableService);
+            _eventService = ServiceLocator.Get<IEventService>();
         }
         public void Dispose()
         {
@@ -50,6 +54,10 @@ namespace Rossoforge.Pool.Service
         public void Populate(IPooledGameobjectData data)
         {
             Populate(data, data.AssetReference);
+        }
+        public void ForceReturnAll()
+        {
+            _eventService.Raise<ForceReturnToPoolEvent>();
         }
 
 #if HAS_ADDRESSABLES
