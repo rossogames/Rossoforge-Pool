@@ -171,7 +171,8 @@ namespace Rossoforge.Pool.Service
 
         private void RegisterData(string category, IPooledObjectData data)
         {
-            if (data == null) return;
+            if (data == null) 
+                return;
 
             if (string.IsNullOrEmpty(category))
                 category = DEFAULT_CATEGORY;
