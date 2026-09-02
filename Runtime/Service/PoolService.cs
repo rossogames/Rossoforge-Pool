@@ -13,8 +13,6 @@ namespace Rossoforge.Pool.Service
 {
     public class PoolService : IPoolService, IInitializable
     {
-        public const string DEFAULT_CATEGORY = "default";
-
         private Dictionary<string, List<IPooledObjectData>> _categoryToData;
         private Dictionary<IPooledObjectData, string> _dataToCategory;
         private Dictionary<string, Components.Pool> _poolGroups;
@@ -47,20 +45,20 @@ namespace Rossoforge.Pool.Service
 #endif
         }
 
-        public T Get<T>(IPooledGameobjectData data, Transform parent, Vector3 position, Space relativeTo, string category = DEFAULT_CATEGORY) where T : Component
+        public T Get<T>(IPooledGameobjectData data, Transform parent, Vector3 position, Space relativeTo, string category = IPoolService.DEFAULT_CATEGORY) where T : Component
         {
             var obj = Get(data, parent, position, relativeTo, category);
             return obj.gameObject.GetComponent<T>();
         }
 
-        public IPooledObject Get(IPooledGameobjectData data, Transform parent, Vector3 position, Space relativeTo, string category = DEFAULT_CATEGORY)
+        public IPooledObject Get(IPooledGameobjectData data, Transform parent, Vector3 position, Space relativeTo, string category = IPoolService.DEFAULT_CATEGORY)
         {
             RegisterData(category, data);
             var pool = GetPoolGroup(data, data.AssetReference);
             return pool.Get(parent, position, relativeTo);
         }
 
-        public void Populate(IPooledGameobjectData data, string category = DEFAULT_CATEGORY)
+        public void Populate(IPooledGameobjectData data, string category = IPoolService.DEFAULT_CATEGORY)
         {
             RegisterData(category, data);
             Populate(data, data.AssetReference);
@@ -72,13 +70,13 @@ namespace Rossoforge.Pool.Service
         }
 
 #if HAS_ADDRESSABLES
-        public async Awaitable<T> GetAsync<T>(IPooledObjectAsyncData data, Transform parent, Vector3 position, Space relativeTo, string category = DEFAULT_CATEGORY) where T : Component
+        public async Awaitable<T> GetAsync<T>(IPooledObjectAsyncData data, Transform parent, Vector3 position, Space relativeTo, string category = IPoolService.DEFAULT_CATEGORY) where T : Component
         {
             var obj = await GetAsync(data, parent, position, relativeTo, category);
             return obj.gameObject.GetComponent<T>();
         }
 
-        public async Awaitable<IPooledObject> GetAsync(IPooledObjectAsyncData data, Transform parent, Vector3 position, Space relativeTo, string category = DEFAULT_CATEGORY)
+        public async Awaitable<IPooledObject> GetAsync(IPooledObjectAsyncData data, Transform parent, Vector3 position, Space relativeTo, string category = IPoolService.DEFAULT_CATEGORY)
         {
             CheckAddressableService();
             var assetReference = await _addressableService.LoadAssetAsync<GameObject>(data.AssetReference);
@@ -87,7 +85,7 @@ namespace Rossoforge.Pool.Service
             return pool.Get(parent, position, relativeTo);
         }
 
-        public async Awaitable PopulateAsync(IPooledObjectAsyncData data, string category = DEFAULT_CATEGORY)
+        public async Awaitable PopulateAsync(IPooledObjectAsyncData data, string category = IPoolService.DEFAULT_CATEGORY)
         {
             CheckAddressableService();
             var assetReference = await _addressableService.LoadAssetAsync<GameObject>(data.AssetReference);
@@ -98,7 +96,7 @@ namespace Rossoforge.Pool.Service
 
         public bool Clear(IPooledObjectData data)
         {
-            if (data == null) 
+            if (data == null)
                 return false;
 
             if (_poolGroups.TryGetValue(data.name, out Components.Pool pool))
@@ -134,7 +132,10 @@ namespace Rossoforge.Pool.Service
         public bool Clear(string category)
         {
             if (string.IsNullOrEmpty(category))
-                category = DEFAULT_CATEGORY;
+            {
+                RossoLogger.Error("[PoolService] Clear: Category cannot be null or empty.");
+                return false;
+            }
 
             if (_categoryToData.TryGetValue(category, out var list))
             {
@@ -171,11 +172,14 @@ namespace Rossoforge.Pool.Service
 
         private void RegisterData(string category, IPooledObjectData data)
         {
-            if (data == null) 
+            if (data == null)
                 return;
 
             if (string.IsNullOrEmpty(category))
-                category = DEFAULT_CATEGORY;
+            {
+                RossoLogger.Error("[PoolService] Clear: Category cannot be null or empty.");
+                return;
+            }
 
             if (_dataToCategory.TryGetValue(data, out string existingCategory))
             {
