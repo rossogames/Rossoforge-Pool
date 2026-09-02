@@ -13,6 +13,9 @@ namespace Rossoforge.Pool.Service
 {
     public class PoolService : IPoolService, IInitializable
     {
+        public const string DEFAULT_CATEGORY = "default";
+
+        private Dictionary<string, List<IPooledObjectData>> _categoryGroups;
         private Dictionary<string, Components.Pool> _poolGroups;
         private GameObject _root;
 
@@ -22,6 +25,7 @@ namespace Rossoforge.Pool.Service
         public void Initialize()
         {
             _poolGroups = new Dictionary<string, Components.Pool>();
+            _categoryGroups = new Dictionary<string, List<IPooledObjectData>>();
             _root = new GameObject("PoolRoot");
             _root.AddComponent<DontDestroyRoot>();
 
@@ -41,18 +45,20 @@ namespace Rossoforge.Pool.Service
         }
 
         // Default
-        public T Get<T>(IPooledGameobjectData data, Transform parent, Vector3 position, Space relativeTo) where T : Component
+        public T Get<T>(IPooledGameobjectData data, Transform parent, Vector3 position, Space relativeTo, string category = DEFAULT_CATEGORY) where T : Component
         {
-            var obj = Get(data, parent, position, relativeTo);
+            var obj = Get(data, parent, position, relativeTo, category);
             return obj.gameObject.GetComponent<T>();
         }
-        public IPooledObject Get(IPooledGameobjectData data, Transform parent, Vector3 position, Space relativeTo)
+        public IPooledObject Get(IPooledGameobjectData data, Transform parent, Vector3 position, Space relativeTo, string category = DEFAULT_CATEGORY)
         {
+            RegisterData(category, data);
             var pool = GetPoolGroup(data, data.AssetReference);
             return pool.Get(parent, position, relativeTo);
         }
-        public void Populate(IPooledGameobjectData data)
+        public void Populate(IPooledGameobjectData data, string category = DEFAULT_CATEGORY)
         {
+            RegisterData(category, data);
             Populate(data, data.AssetReference);
         }
         public void ForceReturnAll()
@@ -61,22 +67,24 @@ namespace Rossoforge.Pool.Service
         }
 
 #if HAS_ADDRESSABLES
-        public async Awaitable<T> GetAsync<T>(IPooledObjectAsyncData data, Transform parent, Vector3 position, Space relativeTo) where T : Component
+        public async Awaitable<T> GetAsync<T>(IPooledObjectAsyncData data, Transform parent, Vector3 position, Space relativeTo, string category = DEFAULT_CATEGORY) where T : Component
         {
-            var obj = await GetAsync(data, parent, position, relativeTo);
+            var obj = await GetAsync(data, parent, position, relativeTo, category);
             return obj.gameObject.GetComponent<T>();
         }
-        public async Awaitable<IPooledObject> GetAsync(IPooledObjectAsyncData data, Transform parent, Vector3 position, Space relativeTo)
+        public async Awaitable<IPooledObject> GetAsync(IPooledObjectAsyncData data, Transform parent, Vector3 position, Space relativeTo, string category = DEFAULT_CATEGORY)
         {
             CheckAddressableService();
             var assetReference = await _addressableService.LoadAssetAsync<GameObject>(data.AssetReference);
+            RegisterData(category, data);
             var pool = GetPoolGroup(data, assetReference);
             return pool.Get(parent, position, relativeTo);
         }
-        public async Awaitable PopulateAsync(IPooledObjectAsyncData data)
+        public async Awaitable PopulateAsync(IPooledObjectAsyncData data, string category = DEFAULT_CATEGORY)
         {
             CheckAddressableService();
             var assetReference = await _addressableService.LoadAssetAsync<GameObject>(data.AssetReference);
+            RegisterData(category, data);
             Populate(data, assetReference);
         }
 #endif
@@ -96,6 +104,43 @@ namespace Rossoforge.Pool.Service
                 return true;
             }
             return false;
+        }
+
+        public bool Clear(string category)
+        {
+            if (string.IsNullOrEmpty(category))
+                category = DEFAULT_CATEGORY;
+
+            if (_categoryGroups.TryGetValue(category, out var list))
+            {
+                var items = new List<IPooledObjectData>(list);
+                bool anyCleared = false;
+                foreach (var item in items)
+                {
+                    if (Clear(item))
+                        anyCleared = true;
+                }
+
+                _categoryGroups.Remove(category);
+                return anyCleared;
+            }
+
+            return false;
+        }
+
+        private void RegisterData(string category, IPooledObjectData data)
+        {
+            if (string.IsNullOrEmpty(category))
+                category = DEFAULT_CATEGORY;
+
+            if (!_categoryGroups.TryGetValue(category, out var list))
+            {
+                list = new List<IPooledObjectData>();
+                _categoryGroups.Add(category, list);
+            }
+
+            if (!list.Contains(data))
+                list.Add(data);
         }
 
         private Components.Pool GetPoolGroup(IPooledObjectData data, GameObject assetReference)
