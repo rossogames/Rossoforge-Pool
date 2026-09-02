@@ -15,7 +15,8 @@ namespace Rossoforge.Pool.Service
     {
         public const string DEFAULT_CATEGORY = "default";
 
-        private Dictionary<string, List<IPooledObjectData>> _categoryGroups;
+        private Dictionary<string, List<IPooledObjectData>> _categoryToData;
+        private Dictionary<IPooledObjectData, string> _dataToCategory;
         private Dictionary<string, Components.Pool> _poolGroups;
         private GameObject _root;
 
@@ -25,13 +26,15 @@ namespace Rossoforge.Pool.Service
         public void Initialize()
         {
             _poolGroups = new Dictionary<string, Components.Pool>();
-            _categoryGroups = new Dictionary<string, List<IPooledObjectData>>();
+            _categoryToData = new Dictionary<string, List<IPooledObjectData>>();
+            _dataToCategory = new Dictionary<IPooledObjectData, string>();
             _root = new GameObject("PoolRoot");
             _root.AddComponent<DontDestroyRoot>();
 
             ServiceLocator.TryGet<IAddressableService>(out _addressableService);
             _eventService = ServiceLocator.Get<IEventService>();
         }
+
         public void Dispose()
         {
 #if UNITY_EDITOR
@@ -44,23 +47,25 @@ namespace Rossoforge.Pool.Service
 #endif
         }
 
-        // Default
         public T Get<T>(IPooledGameobjectData data, Transform parent, Vector3 position, Space relativeTo, string category = DEFAULT_CATEGORY) where T : Component
         {
             var obj = Get(data, parent, position, relativeTo, category);
             return obj.gameObject.GetComponent<T>();
         }
+
         public IPooledObject Get(IPooledGameobjectData data, Transform parent, Vector3 position, Space relativeTo, string category = DEFAULT_CATEGORY)
         {
             RegisterData(category, data);
             var pool = GetPoolGroup(data, data.AssetReference);
             return pool.Get(parent, position, relativeTo);
         }
+
         public void Populate(IPooledGameobjectData data, string category = DEFAULT_CATEGORY)
         {
             RegisterData(category, data);
             Populate(data, data.AssetReference);
         }
+
         public void ForceReturnAll()
         {
             _eventService.Raise<ForceReturnToPoolEvent>();
@@ -72,6 +77,7 @@ namespace Rossoforge.Pool.Service
             var obj = await GetAsync(data, parent, position, relativeTo, category);
             return obj.gameObject.GetComponent<T>();
         }
+
         public async Awaitable<IPooledObject> GetAsync(IPooledObjectAsyncData data, Transform parent, Vector3 position, Space relativeTo, string category = DEFAULT_CATEGORY)
         {
             CheckAddressableService();
@@ -80,6 +86,7 @@ namespace Rossoforge.Pool.Service
             var pool = GetPoolGroup(data, assetReference);
             return pool.Get(parent, position, relativeTo);
         }
+
         public async Awaitable PopulateAsync(IPooledObjectAsyncData data, string category = DEFAULT_CATEGORY)
         {
             CheckAddressableService();
@@ -88,8 +95,12 @@ namespace Rossoforge.Pool.Service
             Populate(data, assetReference);
         }
 #endif
+
         public bool Clear(IPooledObjectData data)
         {
+            if (data == null) 
+                return false;
+
             if (_poolGroups.TryGetValue(data.name, out Components.Pool pool))
             {
 #if UNITY_EDITOR
@@ -101,8 +112,22 @@ namespace Rossoforge.Pool.Service
                 Object.Destroy(pool.gameObject);
 #endif
                 _poolGroups.Remove(data.name);
+
+                if (_dataToCategory.TryGetValue(data, out string category))
+                {
+                    _dataToCategory.Remove(data);
+
+                    if (_categoryToData.TryGetValue(category, out var list))
+                    {
+                        list.Remove(data);
+                        if (list.Count == 0)
+                            _categoryToData.Remove(category);
+                    }
+                }
+
                 return true;
             }
+
             return false;
         }
 
@@ -111,17 +136,33 @@ namespace Rossoforge.Pool.Service
             if (string.IsNullOrEmpty(category))
                 category = DEFAULT_CATEGORY;
 
-            if (_categoryGroups.TryGetValue(category, out var list))
+            if (_categoryToData.TryGetValue(category, out var list))
             {
-                var items = new List<IPooledObjectData>(list);
                 bool anyCleared = false;
-                foreach (var item in items)
+
+                for (int i = list.Count - 1; i >= 0; i--)
                 {
-                    if (Clear(item))
+                    var item = list[i];
+                    if (item == null) continue;
+
+                    if (_poolGroups.TryGetValue(item.name, out Components.Pool pool))
+                    {
+#if UNITY_EDITOR
+                        if (!Application.isPlaying)
+                            Object.DestroyImmediate(pool.gameObject);
+                        else
+                            Object.Destroy(pool.gameObject);
+#else
+                        Object.Destroy(pool.gameObject);
+#endif
+                        _poolGroups.Remove(item.name);
                         anyCleared = true;
+                    }
+
+                    _dataToCategory.Remove(item);
                 }
 
-                _categoryGroups.Remove(category);
+                _categoryToData.Remove(category);
                 return anyCleared;
             }
 
@@ -130,17 +171,28 @@ namespace Rossoforge.Pool.Service
 
         private void RegisterData(string category, IPooledObjectData data)
         {
+            if (data == null) return;
+
             if (string.IsNullOrEmpty(category))
                 category = DEFAULT_CATEGORY;
 
-            if (!_categoryGroups.TryGetValue(category, out var list))
+            if (_dataToCategory.TryGetValue(data, out string existingCategory))
             {
-                list = new List<IPooledObjectData>();
-                _categoryGroups.Add(category, list);
+                if (existingCategory != category)
+                    RossoLogger.Error($"[PoolService] The item '{data.name}' is already registered in category '{existingCategory}'. It cannot be registered in category '{category}'.");
+
+                return;
             }
 
-            if (!list.Contains(data))
-                list.Add(data);
+            if (!_categoryToData.TryGetValue(category, out var list))
+            {
+                list = new List<IPooledObjectData>();
+                _categoryToData.Add(category, list);
+            }
+
+            list.Add(data);
+
+            _dataToCategory.Add(data, category);
         }
 
         private Components.Pool GetPoolGroup(IPooledObjectData data, GameObject assetReference)
@@ -154,6 +206,7 @@ namespace Rossoforge.Pool.Service
             _poolGroups.Add(data.name, newPool);
             return newPool;
         }
+
         private Components.Pool CreatePool(IPooledObjectData data, GameObject assetReference, Transform parent)
         {
             var obj = new GameObject(data.name);
@@ -166,6 +219,7 @@ namespace Rossoforge.Pool.Service
 
             return pool;
         }
+
         private void Populate(IPooledObjectData data, GameObject assetReference)
         {
             List<IPooledObject> pooledObjects = new();
@@ -180,13 +234,14 @@ namespace Rossoforge.Pool.Service
             foreach (var obj in pooledObjects)
                 obj.ReturnToPool();
         }
+
         private void CheckAddressableService()
         {
             if (_addressableService == null)
             {
                 string errorMessage = "Failed to load asset: AddressableService is null. Ensure it is properly registered in the service container.";
                 RossoLogger.Error(errorMessage);
-                throw new System.NullReferenceException();
+                throw new System.NullReferenceException(errorMessage);
             }
         }
     }
