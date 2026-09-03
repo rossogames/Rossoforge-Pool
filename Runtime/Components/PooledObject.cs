@@ -1,4 +1,5 @@
-using Rossoforge.Core.Events;
+using Rossoforge.Events.Bus;
+using Rossoforge.Events.Service;
 using Rossoforge.Pool.Events;
 using Rossoforge.Pool.Service;
 using Rossoforge.Services;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace Rossoforge.Pool.Components
 {
-    public class PooledObject : MonoBehaviour, IPooledObject, 
+    public class PooledObject : MonoBehaviour, IPooledObject,
         IEventListener<ForceReturnToPoolEvent>
     {
         private IEventService _eventService;
