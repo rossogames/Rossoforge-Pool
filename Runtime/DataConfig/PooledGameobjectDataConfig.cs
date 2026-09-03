@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace Rossoforge.Pool.DataConfig
 {
-    [CreateAssetMenu(fileName = nameof(PooledGameobjectData), menuName = "Rossoforge/Pool/Pooled Gameobject Data")]
-    public class PooledGameobjectData : ScriptableObject, IPooledGameobjectData
+    [CreateAssetMenu(fileName = nameof(PooledGameobjectDataConfig), menuName = "Rossoforge/Data Config/Pool/Pooled Gameobject")]
+    public class PooledGameobjectDataConfig : ScriptableObject, IPooledGameobjectDataConfig
     {
         [field: SerializeField]
         public GameObject AssetReference { get; private set; }

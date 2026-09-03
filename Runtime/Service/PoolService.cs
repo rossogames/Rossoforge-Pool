@@ -13,8 +13,8 @@ namespace Rossoforge.Pool.Service
 {
     public class PoolService : IPoolService, IInitializable
     {
-        private Dictionary<string, List<IPooledObjectData>> _categoryToData;
-        private Dictionary<IPooledObjectData, string> _dataToCategory;
+        private Dictionary<string, List<IPooledObjectDataConfig>> _categoryToData;
+        private Dictionary<IPooledObjectDataConfig, string> _dataToCategory;
         private Dictionary<string, Components.Pool> _poolGroups;
         private GameObject _root;
 
@@ -24,8 +24,8 @@ namespace Rossoforge.Pool.Service
         public void Initialize()
         {
             _poolGroups = new Dictionary<string, Components.Pool>();
-            _categoryToData = new Dictionary<string, List<IPooledObjectData>>();
-            _dataToCategory = new Dictionary<IPooledObjectData, string>();
+            _categoryToData = new Dictionary<string, List<IPooledObjectDataConfig>>();
+            _dataToCategory = new Dictionary<IPooledObjectDataConfig, string>();
             _root = new GameObject("PoolRoot");
             _root.AddComponent<DontDestroyRoot>();
 
@@ -45,20 +45,20 @@ namespace Rossoforge.Pool.Service
 #endif
         }
 
-        public T Get<T>(IPooledGameobjectData data, Transform parent, Vector3 position, Space relativeTo, string category = IPoolService.DEFAULT_CATEGORY) where T : Component
+        public T Get<T>(IPooledGameobjectDataConfig data, Transform parent, Vector3 position, Space relativeTo, string category = IPoolService.DEFAULT_CATEGORY) where T : Component
         {
             var obj = Get(data, parent, position, relativeTo, category);
             return obj.gameObject.GetComponent<T>();
         }
 
-        public IPooledObject Get(IPooledGameobjectData data, Transform parent, Vector3 position, Space relativeTo, string category = IPoolService.DEFAULT_CATEGORY)
+        public IPooledObject Get(IPooledGameobjectDataConfig data, Transform parent, Vector3 position, Space relativeTo, string category = IPoolService.DEFAULT_CATEGORY)
         {
             RegisterData(category, data);
             var pool = GetPoolGroup(data, data.AssetReference);
             return pool.Get(parent, position, relativeTo);
         }
 
-        public void Populate(IPooledGameobjectData data, string category = IPoolService.DEFAULT_CATEGORY)
+        public void Populate(IPooledGameobjectDataConfig data, string category = IPoolService.DEFAULT_CATEGORY)
         {
             RegisterData(category, data);
             Populate(data, data.AssetReference);
@@ -70,13 +70,13 @@ namespace Rossoforge.Pool.Service
         }
 
 #if HAS_ADDRESSABLES
-        public async Awaitable<T> GetAsync<T>(IPooledObjectAsyncData data, Transform parent, Vector3 position, Space relativeTo, string category = IPoolService.DEFAULT_CATEGORY) where T : Component
+        public async Awaitable<T> GetAsync<T>(IPooledObjectAsyncDataConfig data, Transform parent, Vector3 position, Space relativeTo, string category = IPoolService.DEFAULT_CATEGORY) where T : Component
         {
             var obj = await GetAsync(data, parent, position, relativeTo, category);
             return obj.gameObject.GetComponent<T>();
         }
 
-        public async Awaitable<IPooledObject> GetAsync(IPooledObjectAsyncData data, Transform parent, Vector3 position, Space relativeTo, string category = IPoolService.DEFAULT_CATEGORY)
+        public async Awaitable<IPooledObject> GetAsync(IPooledObjectAsyncDataConfig data, Transform parent, Vector3 position, Space relativeTo, string category = IPoolService.DEFAULT_CATEGORY)
         {
             CheckAddressableService();
             var assetReference = await _addressableService.LoadAssetAsync<GameObject>(data.AssetReference);
@@ -85,7 +85,7 @@ namespace Rossoforge.Pool.Service
             return pool.Get(parent, position, relativeTo);
         }
 
-        public async Awaitable PopulateAsync(IPooledObjectAsyncData data, string category = IPoolService.DEFAULT_CATEGORY)
+        public async Awaitable PopulateAsync(IPooledObjectAsyncDataConfig data, string category = IPoolService.DEFAULT_CATEGORY)
         {
             CheckAddressableService();
             var assetReference = await _addressableService.LoadAssetAsync<GameObject>(data.AssetReference);
@@ -94,7 +94,7 @@ namespace Rossoforge.Pool.Service
         }
 #endif
 
-        public bool Clear(IPooledObjectData data)
+        public bool Clear(IPooledObjectDataConfig data)
         {
             if (data == null)
                 return false;
@@ -170,7 +170,7 @@ namespace Rossoforge.Pool.Service
             return false;
         }
 
-        private void RegisterData(string category, IPooledObjectData data)
+        private void RegisterData(string category, IPooledObjectDataConfig data)
         {
             if (data == null)
                 return;
@@ -191,7 +191,7 @@ namespace Rossoforge.Pool.Service
 
             if (!_categoryToData.TryGetValue(category, out var list))
             {
-                list = new List<IPooledObjectData>();
+                list = new List<IPooledObjectDataConfig>();
                 _categoryToData.Add(category, list);
             }
 
@@ -200,7 +200,7 @@ namespace Rossoforge.Pool.Service
             _dataToCategory.Add(data, category);
         }
 
-        private Components.Pool GetPoolGroup(IPooledObjectData data, GameObject assetReference)
+        private Components.Pool GetPoolGroup(IPooledObjectDataConfig data, GameObject assetReference)
         {
             if (_poolGroups.TryGetValue(data.name, out Components.Pool pool))
             {
@@ -212,7 +212,7 @@ namespace Rossoforge.Pool.Service
             return newPool;
         }
 
-        private Components.Pool CreatePool(IPooledObjectData data, GameObject assetReference, Transform parent)
+        private Components.Pool CreatePool(IPooledObjectDataConfig data, GameObject assetReference, Transform parent)
         {
             var obj = new GameObject(data.name);
             obj.transform.parent = parent;
@@ -225,7 +225,7 @@ namespace Rossoforge.Pool.Service
             return pool;
         }
 
-        private void Populate(IPooledObjectData data, GameObject assetReference)
+        private void Populate(IPooledObjectDataConfig data, GameObject assetReference)
         {
             List<IPooledObject> pooledObjects = new();
 
