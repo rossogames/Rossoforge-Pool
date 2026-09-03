@@ -1,9 +1,8 @@
 #if HAS_ADDRESSABLES
-using Rossoforge.Core.Pool;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-namespace Rossoforge.Pool.Data
+namespace Rossoforge.Pool.DataConfig
 {
     [CreateAssetMenu(fileName = nameof(PooledObjectAsyncData), menuName = "Rossoforge/Pool/Pooled Object Async Data")]
     public class PooledObjectAsyncData : ScriptableObject, IPooledObjectAsyncData

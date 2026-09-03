@@ -1,8 +1,8 @@
 using Rossoforge.Core.Addressables;
 using Rossoforge.Core.Components;
 using Rossoforge.Core.Events;
-using Rossoforge.Core.Pool;
 using Rossoforge.Core.Services;
+using Rossoforge.Pool.DataConfig;
 using Rossoforge.Pool.Events;
 using Rossoforge.Services;
 using Rossoforge.Utils.Logger;
