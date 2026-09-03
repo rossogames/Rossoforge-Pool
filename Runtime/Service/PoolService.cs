@@ -1,5 +1,4 @@
 using Rossoforge.Addressables.Service;
-using Rossoforge.Core.Addressables;
 using Rossoforge.Core.Components;
 using Rossoforge.Core.Services;
 using Rossoforge.Events.Service;
