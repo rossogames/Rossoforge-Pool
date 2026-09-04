@@ -1,10 +1,10 @@
 using Rossoforge.Addressables.Service;
-using Rossoforge.Core.Components;
-using Rossoforge.Core.Services;
+using Rossoforge.Common.Components;
 using Rossoforge.Events.Service;
 using Rossoforge.Pool.DataConfig;
 using Rossoforge.Pool.Events;
-using Rossoforge.Services;
+using Rossoforge.Services.Locator;
+using Rossoforge.Services.Service;
 using Rossoforge.Utils.Logger;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,7 +27,7 @@ namespace Rossoforge.Pool.Service
             _categoryToData = new Dictionary<string, List<IPooledObjectDataConfig>>();
             _dataToCategory = new Dictionary<IPooledObjectDataConfig, string>();
             _root = new GameObject("PoolRoot");
-            _root.AddComponent<DontDestroyRoot>();
+            _root.AddComponent<PersistentObject>();
 
             ServiceLocator.TryGet<IAddressableService>(out _addressableService);
             _eventService = ServiceLocator.Get<IEventService>();
