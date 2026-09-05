@@ -1,6 +1,6 @@
 using Rossoforge.Pool.DataConfig;
 using Rossoforge.Pool.Service;
-using Rossoforge.Services;
+using Rossoforge.Services.Locator;
 using UnityEngine;
 
 namespace Rossoforge.Pool.Samples.Spaceship
