@@ -1,11 +1,9 @@
-using Rossoforge.Addressables;
-using Rossoforge.Core.Addressables;
-using Rossoforge.Core.Pool;
+using Rossoforge.Events.Service;
 using Rossoforge.Pool.Service;
-using Rossoforge.Services;
+using Rossoforge.Services.Locator;
 using UnityEngine;
 
-namespace Rossoforge.Pool.SpaceshipAsync
+namespace Rossoforge.Pool.Samples.Spaceship
 {
     public class Boot : MonoBehaviour
     {
@@ -13,10 +11,10 @@ namespace Rossoforge.Pool.SpaceshipAsync
         {
             ServiceLocator.SetLocator(new DefaultServiceLocator());
 
-            var addressableService = new AddressableService();
+            var eventService = new EventService();
             var poolService = new PoolService();
 
-            ServiceLocator.Register<IAddressableService>(addressableService);
+            ServiceLocator.Register<IEventService>(eventService);
             ServiceLocator.Register<IPoolService>(poolService);
 
             ServiceLocator.Initialize();

@@ -1,14 +1,14 @@
-using Rossoforge.Core.Pool;
-using Rossoforge.Pool.Data;
-using Rossoforge.Services;
+using Rossoforge.Pool.DataConfig;
+using Rossoforge.Pool.Service;
+using Rossoforge.Services.Locator;
 using UnityEngine;
 
-namespace Rossoforge.Pool.SpaceshipAsync
+namespace Rossoforge.Pool.Samples.SpaceshipAsync
 {
     public class Spaceship : MonoBehaviour
     {
         [SerializeField]
-        private PooledObjectAsyncData _missilePoolData;
+        private PooledObjectAsyncDataConfig _missilePoolData;
 
         private IPoolService _poolService;
         private float _speed = 5f;
