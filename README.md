@@ -100,12 +100,6 @@ Replace `_missilePoolData` with your PoolData ScriptableObject reference. Generi
 
 To use Addressables, register an `IAddressableService` implementation (for example, `AddressableService`) before initializing the `PoolService`. Pooled prefabs can then be loaded via Addressables and cached in the pool.
 
-## Tutorial
-
-A walkthrough (in Spanish) is available here:
-
-https://www.youtube.com/watch?v=0S3NYG8uiQ0
-
 ## Contributing
 
 Contributions, bug reports and feature requests are welcome. Please open an issue or a pull request and follow the repository contribution guidelines.
